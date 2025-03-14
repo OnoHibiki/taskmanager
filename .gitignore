@@ -1,0 +1,8 @@
+# IDE関連の不要ファイルを除外（IntelliJ, VS Code など）
+.idea/
+.vscode/
+*.iml
+
+# OSごとの不要ファイルを除外
+.DS_Store
+Thumbs.db
