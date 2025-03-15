@@ -1,9 +1,13 @@
-com/HibikiOno/taskmanager/controller/TaskController.class
+com/HibikiOno/taskmanager/service/TaskService.class
 com/HibikiOno/taskmanager/repository/UserRepository.class
 com/HibikiOno/taskmanager/service/UserService.class
-com/HibikiOno/taskmanager/entity/Task.class
 com/HibikiOno/taskmanager/repository/TaskRepository.class
+com/HibikiOno/taskmanager/entity/Task$TaskStatus.class
+com/HibikiOno/taskmanager/entity/User.class
+com/HibikiOno/taskmanager/controller/TaskController.class
+com/HibikiOno/taskmanager/entity/Task.class
+com/HibikiOno/taskmanager/controller/UserController$ErrorResponse.class
 com/HibikiOno/taskmanager/controller/UserController.class
 com/HibikiOno/taskmanager/config/SecurityConfig.class
+com/HibikiOno/taskmanager/controller/UserController$ErrorListResponse.class
 com/HibikiOno/taskmanager/TaskmanagerApplication.class
-com/HibikiOno/taskmanager/entity/User.class

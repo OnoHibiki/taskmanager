@@ -6,4 +6,5 @@
 /Users/onohibiki/Programming/taskmanager/src/main/java/com/HibikiOno/taskmanager/entity/User.java
 /Users/onohibiki/Programming/taskmanager/src/main/java/com/HibikiOno/taskmanager/repository/TaskRepository.java
 /Users/onohibiki/Programming/taskmanager/src/main/java/com/HibikiOno/taskmanager/repository/UserRepository.java
+/Users/onohibiki/Programming/taskmanager/src/main/java/com/HibikiOno/taskmanager/service/TaskService.java
 /Users/onohibiki/Programming/taskmanager/src/main/java/com/HibikiOno/taskmanager/service/UserService.java

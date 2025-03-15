@@ -13,6 +13,10 @@ import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
 
 
 
@@ -28,16 +32,20 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user , BindingResult result)  {
         if(result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
+            List<ErrorResponse> errors = result.getFieldErrors().stream()
+            .map(error -> new ErrorResponse(error.getField(),error.getDefaultMessage()))
+            .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(new ErrorListResponse(errors));
         }
         
         if(userService.existsByUsername(user.getUsername())) {
             return ResponseEntity.badRequest().body("そのユーザー名は既に存在します"); 
         }
-
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }
+
+
 
     //ユーザーを取得
     @GetMapping("/{username}")
@@ -56,9 +64,36 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("ユーザー名かパスワードが間違っています!");
         }
-        
+    }
+
+    //エラー文言用クラス
+    class ErrorResponse {
+        private String field;
+        private String message;
+
+        public ErrorResponse(String field, String message) {
+            this.field = field;
+            this.message = message;
+        }
+
+        public String getFiled() { return field ;}
+        public String getMessage() { return message; }
+
     }
     
+    class ErrorListResponse {
+        private List<ErrorResponse> errors ;
+        
+        public ErrorListResponse(List<ErrorResponse> errors) {
+            this.errors = errors;
+        }
+
+        public ErrorListResponse(String field, String message) {
+            this.errors = List.of(new ErrorResponse(field, message));
+        }
+
+        public List<ErrorResponse> getErrors() { return errors; }
+    }
 
 }
 
