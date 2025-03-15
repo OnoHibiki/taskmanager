@@ -1,6 +1,6 @@
 package com.HibikiOno.taskmanager.controller;
 
-import com.HibikiOno.taskmanager.model.Task;
+import com.HibikiOno.taskmanager.entity.Task;
 import com.HibikiOno.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

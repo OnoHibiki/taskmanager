@@ -1,4 +1,4 @@
-package com.HibikiOno.taskmanager.model;
+package com.HibikiOno.taskmanager.entity;
 
 import jakarta.persistence.*;
 
