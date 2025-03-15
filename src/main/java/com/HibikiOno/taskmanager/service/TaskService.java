@@ -6,6 +6,7 @@ import com.HibikiOno.taskmanager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,9 +33,22 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    //タスクを昇順または降順で取得
+    public List<Task> getAllTasksSorted(String sortDirection) {
+        if("desc".equalsIgnoreCase(sortDirection)) {
+            return taskRepository.findAllByOrderByDueDateDesc();
+        }
+        return taskRepository.findAllByOrderByDueDateAsc();
+    }
+
     //ユーザーごとのタスク取得
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByUserId(userId);
+    }
+
+    //指定した締切日のタスクを取得
+    public List<Task> getTasksByDueDateAndUser(LocalDate dueDate, Long userId) {
+        return taskRepository.findByDueDateAndUserId(dueDate, userId);
     }
 
     //タスクをidを指定して更新

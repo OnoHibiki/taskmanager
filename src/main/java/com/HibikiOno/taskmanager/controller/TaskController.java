@@ -1,19 +1,26 @@
 package com.HibikiOno.taskmanager.controller;
 
-
+import com.HibikiOno.taskmanager.entity.User;
 import com.HibikiOno.taskmanager.entity.Task;
 import com.HibikiOno.taskmanager.entity.Task.TaskStatus;
 import com.HibikiOno.taskmanager.service.TaskService;
+import com.HibikiOno.taskmanager.service.UserService;
+
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDate;
 
 
 @RestController
@@ -23,6 +30,9 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private UserService userService;
 
     //すべてのタスクを取得する
     @GetMapping
@@ -44,6 +54,29 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
     
+    //タスクを締切日順に取得する（昇順or降順:デフォルトは昇順）
+    @GetMapping("/sorted")
+    public ResponseEntity<List<Task>> getAllTasks(@RequestParam(defaultValue = "asc") String sort) {
+        List<Task> tasks = taskService.getAllTasksSorted(sort);
+        return ResponseEntity.ok(tasks);
+    }
+    
+    //タスクを締切日で検索する
+    @GetMapping("/dueDate")
+    public ResponseEntity<List<Task>> getTasksByDueDate(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
+        @AuthenticationPrincipal UserDetails userDetails
+    ){
+        String username = userDetails.getUsername();
+        Optional<User> user = userService.findByUsername(username);        
+        
+        if(user.isEmpty()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<Task> tasks = taskService.getTasksByDueDateAndUser(dueDate, user.get().getId());
+        return ResponseEntity.ok(tasks);
+    }
 
     // 新しいタスクを作成する
     @PostMapping
