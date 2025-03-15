@@ -6,3 +6,4 @@
 # OSごとの不要ファイルを除外
 .DS_Store
 Thumbs.db
+target/
