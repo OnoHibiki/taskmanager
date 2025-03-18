@@ -1,4 +1,5 @@
 package com.HibikiOno.taskmanager.controller;
+import com.HibikiOno.taskmanager.dto.UserRegisterDTO;
 
 import com.HibikiOno.taskmanager.entity.User;
 import com.HibikiOno.taskmanager.service.UserService;
@@ -10,14 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
+
 import jakarta.validation.Valid;
 
 import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
-
 
 
 @RestController
@@ -30,7 +29,7 @@ public class UserController {
     
     //新しいユーザを作成
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user , BindingResult result)  {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegisterDTO userDto , BindingResult result)  {
         if(result.hasErrors()) {
             List<ErrorResponse> errors = result.getFieldErrors().stream()
             .map(error -> new ErrorResponse(error.getField(),error.getDefaultMessage()))
@@ -38,9 +37,14 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ErrorListResponse(errors));
         }
         
-        if(userService.existsByUsername(user.getUsername())) {
+        if(userService.existsByUsername(userDto.getUsername())) {
             return ResponseEntity.badRequest().body("そのユーザー名は既に存在します"); 
         }
+
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }

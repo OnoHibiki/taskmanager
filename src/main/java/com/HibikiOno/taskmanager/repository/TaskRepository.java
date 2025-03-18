@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Sort;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.HibikiOno.taskmanager.entity.Task;
 import com.HibikiOno.taskmanager.entity.Task.TaskStatus;
 
@@ -18,4 +21,6 @@ public interface TaskRepository extends JpaRepository<Task, Long>{
     List<Task> findAllByOrderByDueDateAsc();//締切日昇順
     List<Task> findAllByOrderByDueDateDesc();//締切日降順
     List<Task> findByDueDate(LocalDate dueDate);
+
+    Page<Task> findAll(Pageable pageable);
 }

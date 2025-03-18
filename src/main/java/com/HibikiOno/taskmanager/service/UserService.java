@@ -10,11 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.Optional;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
     
     @Autowired
     private UserRepository userRepository;
@@ -40,7 +44,19 @@ public class UserService {
     //パスワードの認証（ログイン用)
     public boolean checkPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword) ;
+
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません: " + username));
+    
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword()) // すでにハッシュ化されているパスワード
+                .roles(user.getRole().name()) // `User` クラスに `getRole()` があることを確認
+                .build();
+    }
 
 }

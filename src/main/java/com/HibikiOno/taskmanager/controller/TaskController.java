@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,4 +110,17 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Task>> getPaginatedTasks(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "dueDate") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction){
+
+        Page<Task> tasks = taskService.getTasksPaginated(page,size,sortBy,direction);
+        return ResponseEntity.ok(tasks);
+
+        }
+    
 }
